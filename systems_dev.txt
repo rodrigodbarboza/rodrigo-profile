@@ -1,0 +1,9 @@
+System Development Expertise
+
+- Successfully delivered large-scale software systems across diverse industries including finance, retail, and e-commerce.
+- Proficient in planning and executing full SDLC: requirements gathering, architecture, coding, testing, and deployment.
+- Led cross-functional collaboration with suppliers, business stakeholders, and technical teams to deliver on time and within scope.
+- Known for simplifying complexity and aligning engineering decisions with business outcomes.
+- Applied agile methodologies and DevOps principles to improve delivery velocity and reliability.
+
+Key technologies: Java, Node.js, Azure, AWS, Docker, Kubernetes, SQL, NoSQL

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>~/rodrigobarboza</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=1.0">
+</head>
+<body class="dark">
+  <div class="terminal-outer">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="window-controls">
+          <span class="window-btn btn-close"></span>
+          <span class="window-btn btn-min"></span>
+          <span class="window-btn btn-max"></span>
+        </div>
+        <span class="terminal-title">~/rodrigobarboza</span>
+      </div>
+      <div class="terminal" id="terminal"></div>
+    </div>
+  </div>
+  <script>
+    const terminal = document.getElementById('terminal');
+    const filesToLoad = {
+      'consulting_services.sh': 'Consulting Services',
+      'systems_dev.txt': 'Systems Development Expertise',
+      'mentoring_guidance.log': 'Mentoring & Team Guidance'
+    };
+  
+    let lines = [
+      "Booting Rodrigo's Terminal v2.0...",
+      "[ OK ] Starting service modules...",
+      "Welcome to Rodrigo's Terminal",
+      "",
+    ];
+    let lineIndex = 0;
+    let isTyping = false;
+  
+    const figlet = [
+  " _____ _                 _        ",
+  "|_   _| |__   __ _ _ __ | | _____ ",
+  "  | | | '_ \\ / _` | '_ \\| |/ / __|",
+  "  | | | | | | (_| | | | |   <\\__ \\",
+  "  |_| |_| |_|\\__,_|_| |_|_|\\_\\___/",
+  ""
+];
+  
+    async function loadExternalFile(filename) {
+      try {
+        const response = await fetch(filename);
+        const text = await response.text();
+        return text.split('\n');
+      } catch {
+        return [`# Failed to load ${filename}`];
+      }
+    }
+  
+    async function buildBootSequence() {
+      for (const [file, label] of Object.entries(filesToLoad)) {
+        lines.push(`<span class="prompt">rodrigo@linux:~$</span> <span class="command">cat ${file}</span>`);
+        const contentLines = await loadExternalFile(file);
+        lines.push(...contentLines.map(line => `<span class="output">${line}</span>`), "");
+      }
+  
+      lines.push(`<span class="prompt">rodrigo@linux:~$</span> <span class="command">curl -O https://rodrigobarboza.com/resume.pdf</span>`);
+      lines.push(`<span class="output">[================] 100% Saved as resume.pdf</span>`, "");
+  
+      lines.push(`<span class="prompt">rodrigo@linux:~$</span> <span class="command">firefox https://www.linkedin.com/in/rodrigo-dias-0aa2806/</span>`);
+      lines.push(`<span class="output">Launching browser... Visit: <a href="https://www.linkedin.com/in/rodrigo-dias-0aa2806/" target="_blank">https://www.linkedin.com/in/rodrigo-dias-0aa2806/</a></span>`, "");
+  
+      lines.push(`<span class="prompt">rodrigo@linux:~$</span> <span class="command">figlet "Thanks!"</span>`);
+      lines.push(...figlet.map(line => `<span class="filename">${line}</span>`));
+      lines.push(`<span class="output"># EOF</span>`);
+  
+      typeNextLine();
+    }
+  
+    function typeNextLine() {
+      if (lineIndex >= lines.length) return;
+  
+      const line = lines[lineIndex++];
+      const div = document.createElement("div");
+  
+      if (line.includes("<span")) {
+        div.innerHTML = line;
+        terminal.appendChild(div);
+        scrollToBottom();
+        setTimeout(typeNextLine, 80);
+      } else {
+        let i = 0;
+        isTyping = true;
+  
+        function typeChar() {
+          if (i <= line.length) {
+            div.innerText = line.slice(0, i);
+            terminal.appendChild(div);
+            scrollToBottom();
+            i++;
+            setTimeout(typeChar, 10);
+          } else {
+            isTyping = false;
+            setTimeout(typeNextLine, 80);
+          }
+        }
+  
+        terminal.appendChild(div);
+        typeChar();
+      }
+    }
+  
+    function scrollToBottom() {
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('light');
+      terminal.classList.toggle('dark');
+      terminal.classList.toggle('light');
+    }
+  
+    window.onload = () => buildBootSequence();
+
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === 't') { // Ctrl+T to toggle theme
+        toggleTheme();
+      } else if (event.ctrlKey && event.key === 'r') { // Ctrl+R to restart terminal
+        restartTerminal();
+      }
+    });
+
+    function restartTerminal() {
+      terminal.innerHTML = ''; // Clear the terminal
+      lineIndex = 0; // Reset the line index
+      buildBootSequence(); // Rebuild the boot sequence
+    }
+
+    function showLoadingDots() {
+      const loadingText = document.createElement('div');
+      loadingText.innerHTML = 'Loading<span class="dots"></span>';
+      terminal.appendChild(loadingText);
+
+      let dots = '';
+      setInterval(() => {
+        dots = dots.length < 3 ? dots + '.' : '';
+        loadingText.querySelector('.dots').innerText = dots;
+      }, 500);
+    }
+
+    // Call this function during the boot sequence
+    window.onload = () => {
+      showLoadingDots();
+      setTimeout(() => {
+        terminal.innerHTML = ''; // Clear loading dots
+        buildBootSequence();
+      }, 3000); // Simulate 3 seconds of loading
+    };
+
+    function toggleThemeWithEffect() {
+      document.body.classList.add('pixelated');
+      setTimeout(() => {
+        toggleTheme(); // Call the existing toggleTheme function
+        document.body.classList.remove('pixelated');
+      }, 500);
+    }
+
+    // Update the keybinding to use the new function
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === 't') { // Ctrl+T to toggle theme
+        toggleThemeWithEffect();
+      }
+    });
+
+    function addScrollingText(text) {
+      const scrollingDiv = document.createElement('div');
+      scrollingDiv.innerText = text;
+      scrollingDiv.style.position = 'absolute';
+      scrollingDiv.style.whiteSpace = 'nowrap';
+      scrollingDiv.style.top = '50%';
+      scrollingDiv.style.left = '100%';
+      scrollingDiv.style.transform = 'translateY(-50%)';
+      scrollingDiv.style.color = '#4ec9b0';
+      scrollingDiv.style.fontSize = '16px';
+      scrollingDiv.style.animation = 'scrollText 10s linear infinite';
+      document.body.appendChild(scrollingDiv);
+    }
+
+    function cycleColors() {
+      const colors = ['#1e1e1e', '#2e2e2e', '#3e3e3e', '#4e4e4e'];
+      let index = 0;
+
+      setInterval(() => {
+        document.body.style.backgroundColor = colors[index];
+        index = (index + 1) % colors.length;
+      }, 1000);
+    }
+
+    // Call this function on window load
+    window.onload = () => {
+      buildBootSequence();
+     //ycleColors();
+    };
+
+  </script>
+  
+</body>
+</html>
