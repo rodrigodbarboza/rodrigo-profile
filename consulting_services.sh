@@ -19,4 +19,4 @@ echo "  → Deploy full-stack apps in cloud-native environments"
 echo "  → Automate infrastructure with IaC tools (Terraform, Bicep)"
 echo "  → Monitor and scale with DevOps best practices"
 echo
-echo "Need custom solutions? Reach out at: <a href="mailto:contact@rodrigobarboza.com">contact@rodrigobarboza.com</a>"
+echo "Need custom solutions? Reach out at: <a href="mailto:rodrigodbarboza@gmail.com">rodrigodbarboza@gmail.com</a>"
